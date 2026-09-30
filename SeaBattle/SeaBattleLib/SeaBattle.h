@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef GAME_H
-#define GAME_H
-
 #include <vector>
 
 enum class ShotResult {
@@ -95,4 +92,3 @@ public:
     int getWinner() const;
 };
 
-#endif

@@ -55,6 +55,38 @@ TEST(ShipTest, Miss) {
     EXPECT_FALSE(ship.isSunk());
 }
 
+TEST(GameFieldTest, GetCellUnknown) {
+    GameField field(5);
+
+    EXPECT_EQ(field.getCell(Position(2, 2), ShowShip::No), '.');
+}
+
+TEST(GameFieldTest, GetCellMiss) {
+    GameField field(5);
+
+    ASSERT_EQ(field.shoot(Position(2, 2)), ShotResult::Miss);
+
+    EXPECT_EQ(field.getCell(Position(2, 2), ShowShip::No), 'o');
+}
+
+TEST(GameFieldTest, GetCellHit) {
+    GameField field(5);
+
+    ASSERT_TRUE(field.addShip(Ship(Position(0, 0), 2, true)));
+    ASSERT_EQ(field.shoot(Position(0, 0)), ShotResult::Hit);
+
+    EXPECT_EQ(field.getCell(Position(0, 0), ShowShip::No), 'X');
+}
+
+TEST(GameFieldTest, GetCellShowShip) {
+    GameField field(5);
+
+    ASSERT_TRUE(field.addShip(Ship(Position(0, 0), 1, true)));
+
+    EXPECT_EQ(field.getCell(Position(0, 0), ShowShip::No), '.');
+    EXPECT_EQ(field.getCell(Position(0, 0), ShowShip::Yes), 'S');
+}
+
 TEST(GameFieldTest, SizeAndBorders) {
     GameField field(5);
 
