@@ -52,18 +52,18 @@ int main() {
             return 0;
         }
 
-        int result = game.shoot(Position(x - 1, y - 1));
+        ShotResult result = game.shoot(Position(x - 1, y - 1));
 
-        if (result == -1) {
+        if (result == ShotResult::Invalid) {
             std::cout << "Неверные координаты или повторный выстрел.\n";
         }
-        else if (result == 0) {
+        else if (result == ShotResult::Miss) {
             std::cout << "Промах!\n";
         }
-        else if (result == 1) {
+        else if (result == ShotResult::Hit) {
             std::cout << "Попадание!\n";
         }
-        else {
+        else if (result == ShotResult::Sunk) {
             std::cout << "Корабль потоплен!\n";
         }
     }

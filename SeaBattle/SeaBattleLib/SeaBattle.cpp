@@ -123,9 +123,9 @@ bool GameField::wasShot(Position position) const {
     return false;
 }
 
-int GameField::shoot(Position position) {
+ShotResult GameField::shoot(Position position) {
     if (!isInside(position) || wasShot(position)) {
-        return -1;
+        return ShotResult::Invalid;
     }
 
     shots.push_back(position);
@@ -133,14 +133,14 @@ int GameField::shoot(Position position) {
     for (Ship& ship : ships) {
         if (ship.shoot(position)) {
             if (ship.isSunk()) {
-                return 2;
+                return ShotResult::Sunk;
             }
 
-            return 1;
+            return ShotResult::Hit;
         }
     }
 
-    return 0;
+    return ShotResult::Miss;
 }
 
 bool GameField::allShipsSunk() const {
@@ -197,10 +197,9 @@ const GameField& Player::getField() const {
     return field;
 }
 
-int Player::attack(Player& enemy, Position position) {
+ShotResult Player::attack(Player& enemy, Position position) {
     return enemy.field.shoot(position);
 }
-
 bool Player::hasLost() const {
     return field.allShipsSunk();
 }
@@ -222,15 +221,17 @@ int Game::getCurrentPlayer() const {
     return currentPlayer;
 }
 
-int Game::shoot(Position position) {
+ShotResult Game::shoot(Position position) {
     if (isFinished()) {
-        return -1;
+        return ShotResult::Invalid;
     }
 
     int enemy = 1 - currentPlayer;
-    int result = players[currentPlayer].attack(players[enemy], position);
 
-    if (result == 0) {
+    ShotResult result =
+        players[currentPlayer].attack(players[enemy], position);
+
+    if (result == ShotResult::Miss) {
         currentPlayer = enemy;
     }
 

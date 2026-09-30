@@ -5,6 +5,13 @@
 
 #include <vector>
 
+enum class ShotResult {
+    Invalid,
+    Miss,
+    Hit,
+    Sunk
+};
+
 
 enum class ShowShip {
     No,
@@ -52,7 +59,7 @@ public:
     bool wasShot(Position position) const;
 
   
-    int shoot(Position position);
+    ShotResult shoot(Position position);
 
     bool allShipsSunk() const;
     char getCell(Position position, ShowShip showShips) const;
@@ -67,7 +74,7 @@ public:
     GameField& getField();
     const GameField& getField() const;
 
-    int attack(Player& enemy, Position position);
+    ShotResult attack(Player& enemy, Position position);
     bool hasLost() const;
 };
 
@@ -82,7 +89,7 @@ public:
     Player& getPlayer(int index);
     int getCurrentPlayer() const;
 
-    int shoot(Position position);
+    ShotResult shoot(Position position);
     bool isFinished() const;
 
     int getWinner() const;

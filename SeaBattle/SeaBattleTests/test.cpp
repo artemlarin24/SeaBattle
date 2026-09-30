@@ -1,6 +1,4 @@
 #include "pch.h"
-
-
 #include "SeaBattle.h"
 
 TEST(PositionTest, DefaultCoordinates) {
@@ -21,7 +19,6 @@ TEST(PositionTest, Equality) {
     EXPECT_TRUE(Position(1, 2) == Position(1, 2));
     EXPECT_FALSE(Position(1, 2) == Position(2, 1));
 }
-
 
 TEST(ShipTest, HorizontalShip) {
     Ship ship(Position(0, 0), 2, true);
@@ -78,11 +75,14 @@ TEST(GameFieldTest, AddShip) {
 
 TEST(GameFieldTest, Shoot) {
     GameField field(5);
+
     ASSERT_TRUE(field.addShip(Ship(Position(0, 0), 2, true)));
 
-    EXPECT_EQ(field.shoot(Position(4, 4)), 0);
-    EXPECT_EQ(field.shoot(Position(0, 0)), 1);
-    EXPECT_EQ(field.shoot(Position(1, 0)), 2);
+    EXPECT_EQ(field.shoot(Position(5, 0)), ShotResult::Invalid);
+    EXPECT_EQ(field.shoot(Position(4, 4)), ShotResult::Miss);
+    EXPECT_EQ(field.shoot(Position(0, 0)), ShotResult::Hit);
+    EXPECT_EQ(field.shoot(Position(0, 0)), ShotResult::Invalid);
+    EXPECT_EQ(field.shoot(Position(1, 0)), ShotResult::Sunk);
 
     EXPECT_TRUE(field.allShipsSunk());
 }
@@ -90,18 +90,19 @@ TEST(GameFieldTest, Shoot) {
 TEST(GameFieldTest, RepeatedShot) {
     GameField field(5);
 
-    EXPECT_EQ(field.shoot(Position(2, 2)), 0);
-    EXPECT_EQ(field.shoot(Position(2, 2)), -1);
+    EXPECT_EQ(field.shoot(Position(2, 2)), ShotResult::Miss);
+    EXPECT_EQ(field.shoot(Position(2, 2)), ShotResult::Invalid);
 }
 
 TEST(PlayerTest, Attack) {
     Player first(5);
     Player second(5);
 
-    ASSERT_TRUE(second.getField().addShip(Ship(Position(0, 0), 1, true)));
+    ASSERT_TRUE(second.getField().addShip(
+        Ship(Position(0, 0), 1, true)));
 
     EXPECT_FALSE(second.hasLost());
-    EXPECT_EQ(first.attack(second, Position(0, 0)), 2);
+    EXPECT_EQ(first.attack(second, Position(0, 0)), ShotResult::Sunk);
     EXPECT_TRUE(second.hasLost());
 }
 
@@ -115,7 +116,7 @@ TEST(GameTest, ChangeTurnAfterMiss) {
         Ship(Position(2, 2), 1, true)));
 
     EXPECT_EQ(game.getCurrentPlayer(), 0);
-    EXPECT_EQ(game.shoot(Position(4, 4)), 0);
+    EXPECT_EQ(game.shoot(Position(4, 4)), ShotResult::Miss);
     EXPECT_EQ(game.getCurrentPlayer(), 1);
 }
 
@@ -131,7 +132,7 @@ TEST(GameTest, Victory) {
     EXPECT_FALSE(game.isFinished());
     EXPECT_EQ(game.getWinner(), -1);
 
-    EXPECT_EQ(game.shoot(Position(2, 2)), 2);
+    EXPECT_EQ(game.shoot(Position(2, 2)), ShotResult::Sunk);
 
     EXPECT_TRUE(game.isFinished());
     EXPECT_EQ(game.getWinner(), 0);
