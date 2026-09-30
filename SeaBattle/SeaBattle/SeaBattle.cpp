@@ -15,7 +15,7 @@ void printField(const GameField& field) {
         std::cout << y + 1 << " ";
 
         for (int x = 0; x < field.getSize(); x++) {
-            std::cout << field.getCell(Position(x, y), false) << " ";
+            std::cout << field.getCell(Position(x, y), ShowShip::No) << " ";
         }
 
         std::cout << "\n";
