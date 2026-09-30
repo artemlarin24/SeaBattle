@@ -50,5 +50,35 @@ public:
     bool allShipsSunk() const;
     char getCell(Position position, bool showShips) const;
 };
+class Player {
+private:
+    GameField field;
+
+public:
+    Player(int fieldSize = 5);
+
+    GameField& getField();
+    const GameField& getField() const;
+
+    int attack(Player& enemy, Position position);
+    bool hasLost() const;
+};
+
+class Game {
+private:
+    Player players[2];
+    int currentPlayer;
+
+public:
+    Game(int fieldSize = 5);
+
+    Player& getPlayer(int index);
+    int getCurrentPlayer() const;
+
+    int shoot(Position position);
+    bool isFinished() const;
+
+    int getWinner() const;
+};
 
 #endif
