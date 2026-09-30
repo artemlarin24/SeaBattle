@@ -102,6 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\windo\SeaBattle\SeaBattle\SeaBattleLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,7 +127,9 @@
     <ClCompile Include="SeaBattle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SeaBattle.h" />
+    <ProjectReference Include="..\SeaBattleLib\SeaBattleLib.vcxproj">
+      <Project>{de20baa1-4219-4d81-8719-37bdbf4a44b0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
