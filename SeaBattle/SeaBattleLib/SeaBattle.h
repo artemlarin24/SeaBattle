@@ -5,6 +5,13 @@
 
 #include <vector>
 
+
+enum class ShowShip {
+    No,
+    Yes
+};
+
+
 class Position {
 public:
     int x;
@@ -48,7 +55,7 @@ public:
     int shoot(Position position);
 
     bool allShipsSunk() const;
-    char getCell(Position position, bool showShips) const;
+    char getCell(Position position, ShowShip showShips) const;
 };
 class Player {
 private:

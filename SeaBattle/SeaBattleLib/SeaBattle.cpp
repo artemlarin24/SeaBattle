@@ -95,7 +95,7 @@ bool GameField::addShip(const Ship& ship) {
                 int dx = cell.x - existingCell.x;
                 int dy = cell.y - existingCell.y;
 
-                // Корабли не должны пересекаться или соприкасаться.
+       
                 if (dx >= -1 && dx <= 1 &&
                     dy >= -1 && dy <= 1) {
                     return false;
@@ -104,7 +104,7 @@ bool GameField::addShip(const Ship& ship) {
         }
     }
 
-    // После начала стрельбы размещать корабли нельзя.
+  
     if (!shots.empty()) {
         return false;
     }
@@ -157,7 +157,7 @@ bool GameField::allShipsSunk() const {
     return true;
 }
 
-char GameField::getCell(Position position, bool showShips) const {
+char GameField::getCell(Position position, ShowShip showShips) const {
     if (!isInside(position)) {
         return '?';
     }
@@ -179,7 +179,7 @@ char GameField::getCell(Position position, bool showShips) const {
         return 'o';
     }
 
-    if (showShips && hasShip) {
+    if (showShips == ShowShip::Yes && hasShip) {
         return 'S';
     }
 
