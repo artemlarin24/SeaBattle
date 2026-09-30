@@ -93,3 +93,46 @@ TEST(GameFieldTest, RepeatedShot) {
     EXPECT_EQ(field.shoot(Position(2, 2)), 0);
     EXPECT_EQ(field.shoot(Position(2, 2)), -1);
 }
+
+TEST(PlayerTest, Attack) {
+    Player first(5);
+    Player second(5);
+
+    ASSERT_TRUE(second.getField().addShip(Ship(Position(0, 0), 1, true)));
+
+    EXPECT_FALSE(second.hasLost());
+    EXPECT_EQ(first.attack(second, Position(0, 0)), 2);
+    EXPECT_TRUE(second.hasLost());
+}
+
+TEST(GameTest, ChangeTurnAfterMiss) {
+    Game game(5);
+
+    ASSERT_TRUE(game.getPlayer(0).getField().addShip(
+        Ship(Position(0, 0), 1, true)));
+
+    ASSERT_TRUE(game.getPlayer(1).getField().addShip(
+        Ship(Position(2, 2), 1, true)));
+
+    EXPECT_EQ(game.getCurrentPlayer(), 0);
+    EXPECT_EQ(game.shoot(Position(4, 4)), 0);
+    EXPECT_EQ(game.getCurrentPlayer(), 1);
+}
+
+TEST(GameTest, Victory) {
+    Game game(5);
+
+    ASSERT_TRUE(game.getPlayer(0).getField().addShip(
+        Ship(Position(0, 0), 1, true)));
+
+    ASSERT_TRUE(game.getPlayer(1).getField().addShip(
+        Ship(Position(2, 2), 1, true)));
+
+    EXPECT_FALSE(game.isFinished());
+    EXPECT_EQ(game.getWinner(), -1);
+
+    EXPECT_EQ(game.shoot(Position(2, 2)), 2);
+
+    EXPECT_TRUE(game.isFinished());
+    EXPECT_EQ(game.getWinner(), 0);
+}

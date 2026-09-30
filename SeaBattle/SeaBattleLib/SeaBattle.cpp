@@ -185,3 +185,71 @@ char GameField::getCell(Position position, bool showShips) const {
 
     return '.';
 }
+
+Player::Player(int fieldSize) : field(fieldSize) {
+}
+
+GameField& Player::getField() {
+    return field;
+}
+
+const GameField& Player::getField() const {
+    return field;
+}
+
+int Player::attack(Player& enemy, Position position) {
+    return enemy.field.shoot(position);
+}
+
+bool Player::hasLost() const {
+    return field.allShipsSunk();
+}
+
+Game::Game(int fieldSize)
+    : players{ Player(fieldSize), Player(fieldSize) } {
+    currentPlayer = 0;
+}
+
+Player& Game::getPlayer(int index) {
+    if (index < 0 || index > 1) {
+        throw std::out_of_range("Invalid player index");
+    }
+
+    return players[index];
+}
+
+int Game::getCurrentPlayer() const {
+    return currentPlayer;
+}
+
+int Game::shoot(Position position) {
+    if (isFinished()) {
+        return -1;
+    }
+
+    int enemy = 1 - currentPlayer;
+    int result = players[currentPlayer].attack(players[enemy], position);
+
+    if (result == 0) {
+        currentPlayer = enemy;
+    }
+
+    return result;
+}
+
+bool Game::isFinished() const {
+    return players[0].hasLost() || players[1].hasLost();
+}
+
+int Game::getWinner() const {
+    if (players[0].hasLost()) {
+        return 1;
+    }
+
+    if (players[1].hasLost()) {
+        return 0;
+    }
+
+    return -1;
+}
+
