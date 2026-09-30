@@ -57,3 +57,39 @@ TEST(ShipTest, Miss) {
     EXPECT_FALSE(ship.shoot(Position(3, 3)));
     EXPECT_FALSE(ship.isSunk());
 }
+
+TEST(GameFieldTest, SizeAndBorders) {
+    GameField field(5);
+
+    EXPECT_EQ(field.getSize(), 5);
+    EXPECT_TRUE(field.isInside(Position(0, 0)));
+    EXPECT_TRUE(field.isInside(Position(4, 4)));
+    EXPECT_FALSE(field.isInside(Position(5, 0)));
+    EXPECT_FALSE(field.isInside(Position(-1, 0)));
+}
+
+TEST(GameFieldTest, AddShip) {
+    GameField field(5);
+
+    EXPECT_TRUE(field.addShip(Ship(Position(0, 0), 2, true)));
+    EXPECT_FALSE(field.addShip(Ship(Position(0, 0), 1, true)));
+    EXPECT_FALSE(field.addShip(Ship(Position(4, 4), 2, true)));
+}
+
+TEST(GameFieldTest, Shoot) {
+    GameField field(5);
+    ASSERT_TRUE(field.addShip(Ship(Position(0, 0), 2, true)));
+
+    EXPECT_EQ(field.shoot(Position(4, 4)), 0);
+    EXPECT_EQ(field.shoot(Position(0, 0)), 1);
+    EXPECT_EQ(field.shoot(Position(1, 0)), 2);
+
+    EXPECT_TRUE(field.allShipsSunk());
+}
+
+TEST(GameFieldTest, RepeatedShot) {
+    GameField field(5);
+
+    EXPECT_EQ(field.shoot(Position(2, 2)), 0);
+    EXPECT_EQ(field.shoot(Position(2, 2)), -1);
+}
